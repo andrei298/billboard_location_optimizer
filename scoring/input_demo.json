@@ -1,0 +1,9 @@
+{
+  "creative_text": "Pizza fierbinte livrată în 20 de minute",
+  "billboard_size_m": { "width": 12, "height": 4 },
+  "locations": [
+    { "location_id": "A", "lat": 44.4574, "lon": 26.0961, "monthly_price_eur": [2500, 3500] },
+    { "location_id": "B", "lat": 44.4630, "lon": 26.0921, "monthly_price_eur": [1800, 2400] },
+    { "location_id": "C", "lat": 44.4486, "lon": 26.0993, "monthly_price_eur": 2000 }
+  ]
+}

@@ -1,0 +1,1655 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f6f3">
+    <title>SightLine — Rezultatul analizei</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, "Segoe UI", sans-serif;
+        color: #20231f;
+        background: #f5f6f3;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        --muted: #73776e;
+        --line: #e5e7e0;
+        --green: #526638;
+        --lime: #d6f58a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        padding: 28px;
+        background:
+          radial-gradient(ellipse at 50% -20%, #fff 0, transparent 56%),
+          #f5f6f3;
+      }
+
+      main {
+        width: min(100%, 1120px);
+        margin: 0 auto;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 58px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 15px;
+        font-weight: 750;
+        letter-spacing: -0.04em;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 25px;
+        height: 25px;
+        place-items: center;
+        border-radius: 8px;
+        background: var(--lime);
+        font-size: 14px;
+      }
+
+      .back-link {
+        color: #585d53;
+        font-size: 12px;
+        font-weight: 650;
+      }
+
+      .back-link:hover {
+        color: #23261f;
+      }
+
+      .page-heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 28px;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: #777d70;
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(36px, 5vw, 54px);
+        font-weight: 650;
+        letter-spacing: -0.07em;
+        line-height: 1.05;
+      }
+
+      .heading-copy {
+        max-width: 480px;
+        margin: 12px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .demo-badge,
+      .label-pill {
+        display: inline-flex;
+        width: fit-content;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 11px;
+        border: 1px solid #e6e9df;
+        border-radius: 999px;
+        background: #fff;
+        color: #62685a;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .demo-badge::before {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #a7c675;
+        content: "";
+      }
+
+      .results-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.85fr);
+        align-items: stretch;
+        gap: 18px;
+      }
+
+      .card {
+        min-width: 0;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 12px 36px rgb(34 39 27 / 4%);
+      }
+
+      .render-card {
+        overflow: hidden;
+      }
+
+      .card-heading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 23px 24px 18px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.035em;
+      }
+
+      .card-copy {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.5;
+      }
+
+      .scene {
+        position: relative;
+        overflow: hidden;
+        margin: 0 12px;
+        border-radius: 13px;
+        background: #dfe8df;
+        isolation: isolate;
+      }
+
+      .scene svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .scene-overlay {
+        position: absolute;
+        top: 13px;
+        left: 13px;
+        padding: 7px 9px;
+        border: 1px solid rgb(255 255 255 / 55%);
+        border-radius: 999px;
+        background: rgb(255 255 255 / 78%);
+        color: #424a3c;
+        font-size: 9px;
+        font-weight: 750;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        backdrop-filter: blur(8px);
+      }
+
+      .scene-caption {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 15px 20px 19px;
+      }
+
+      .caption-main {
+        margin: 0;
+        font-size: 12px;
+        font-weight: 650;
+      }
+
+      .caption-sub {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .distance-controls {
+        display: flex;
+        gap: 5px;
+        padding: 4px;
+        border: 1px solid #e8e9e4;
+        border-radius: 999px;
+        background: #f7f8f5;
+      }
+
+      .distance-controls button {
+        min-width: 43px;
+        padding: 7px 8px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: #73776e;
+        font: inherit;
+        font-size: 10px;
+        font-weight: 650;
+        cursor: pointer;
+      }
+
+      .distance-controls button[aria-pressed="true"] {
+        background: #fff;
+        color: #30362a;
+        box-shadow: 0 1px 5px rgb(34 39 27 / 10%);
+      }
+
+      .verdict-card {
+        display: flex;
+        flex-direction: column;
+        padding: 25px;
+      }
+
+      .verdict-card .label-pill {
+        margin-bottom: 19px;
+        border-color: #e5ebd9;
+        background: #f7f9f2;
+        color: #566644;
+      }
+
+      .verdict-card h2 {
+        font-size: clamp(22px, 2.8vw, 30px);
+        line-height: 1.12;
+        letter-spacing: -0.055em;
+      }
+
+      .verdict-copy {
+        margin: 11px 0 20px;
+        color: #666b62;
+        font-size: 12px;
+        line-height: 1.65;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+        margin-top: auto;
+      }
+
+      .metric {
+        min-width: 0;
+        padding: 13px;
+        border: 1px solid #eceee8;
+        border-radius: 12px;
+        background: #fbfcfa;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: clamp(19px, 2.5vw, 25px);
+        font-weight: 650;
+        letter-spacing: -0.06em;
+      }
+
+      .metric span {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.4;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .detail-card {
+        padding: 23px 24px;
+      }
+
+      .detail-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+      .detail-heading .card-copy {
+        margin: 0;
+      }
+
+      .ranking {
+        display: grid;
+      }
+
+      .ranking-row {
+        display: grid;
+        grid-template-columns: 35px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 11px;
+        padding: 12px 0;
+        border-top: 1px solid #f0f1ed;
+      }
+
+      .rank-number {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        place-items: center;
+        border-radius: 50%;
+        background: #f2f3ef;
+        color: #666b62;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .ranking-row:first-child .rank-number {
+        background: #eaf1dd;
+        color: #4c6035;
+      }
+
+      .rank-name {
+        margin: 0;
+        font-size: 12px;
+        font-weight: 650;
+      }
+
+      .rank-detail {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .rank-value {
+        text-align: right;
+      }
+
+      .rank-value strong {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .rank-value span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 9px;
+      }
+
+      .campaign-details {
+        display: grid;
+        gap: 12px;
+        margin: 0;
+      }
+
+      .campaign-details div {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        padding-bottom: 11px;
+        border-bottom: 1px solid #f0f1ed;
+      }
+
+      .campaign-details div:last-child {
+        padding-bottom: 0;
+        border-bottom: 0;
+      }
+
+      .campaign-details dt {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .campaign-details dd {
+        max-width: 65%;
+        margin: 0;
+        overflow-wrap: anywhere;
+        font-size: 11px;
+        font-weight: 650;
+        text-align: right;
+      }
+
+      .empty-locations {
+        margin: 0;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.6;
+      }
+
+      .creative-analysis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+        margin-top: 18px;
+      }
+
+      .creative-preview {
+        display: grid;
+        min-height: 220px;
+        overflow: hidden;
+        place-items: center;
+        border: 1px solid #eceee8;
+        border-radius: 13px;
+        background:
+          linear-gradient(45deg, #f1f2ee 25%, transparent 25%),
+          linear-gradient(-45deg, #f1f2ee 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #f1f2ee 75%),
+          linear-gradient(-45deg, transparent 75%, #f1f2ee 75%),
+          #fafbf9;
+        background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+        background-size: 16px 16px;
+      }
+
+      .creative-preview img {
+        display: block;
+        width: 100%;
+        max-height: 360px;
+        object-fit: contain;
+      }
+
+      .creative-preview p {
+        max-width: 420px;
+        margin: 20px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.6;
+        text-align: center;
+      }
+
+      .ai-actions {
+        display: grid;
+        justify-items: start;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .ai-update-button {
+        min-height: 38px;
+        padding: 0 15px;
+        border: 0;
+        border-radius: 999px;
+        background: #35442a;
+        color: #fff;
+        font: inherit;
+        font-size: 11px;
+        font-weight: 650;
+        cursor: pointer;
+      }
+
+      .ai-update-button:hover:not(:disabled) {
+        background: #526638;
+      }
+
+      .ai-update-button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .ai-status {
+        margin: 0;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.55;
+      }
+
+      .ai-suggestions {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #e6ebdd;
+        border-radius: 12px;
+        background: #f7f9f3;
+      }
+
+      .ai-suggestions[hidden] {
+        display: none;
+      }
+
+      .ai-suggestions h4 {
+        margin: 0 0 8px;
+        color: #35442a;
+        font-size: 11px;
+      }
+
+      .ai-suggestions p {
+        margin: 0;
+        color: #444940;
+        font-size: 11px;
+        line-height: 1.65;
+        white-space: pre-line;
+      }
+
+      .creative-findings {
+        display: grid;
+        align-content: start;
+        gap: 18px;
+      }
+
+      .palette {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+      }
+
+      .swatch {
+        display: grid;
+        width: 52px;
+        gap: 5px;
+        justify-items: center;
+      }
+
+      .swatch-color {
+        width: 44px;
+        height: 44px;
+        border: 1px solid rgb(0 0 0 / 8%);
+        border-radius: 13px;
+      }
+
+      .swatch code {
+        color: var(--muted);
+        font-family: inherit;
+        font-size: 9px;
+      }
+
+      .creative-metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+      }
+
+      .score-overview {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 17px;
+        padding: 17px;
+        border: 1px solid #e6ebdd;
+        border-radius: 14px;
+        background: #f7f9f3;
+      }
+
+      .score-overview span {
+        display: block;
+        color: #60675a;
+        font-size: 11px;
+        font-weight: 650;
+      }
+
+      .score-overview p {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.5;
+      }
+
+      .score-total {
+        flex: 0 0 auto;
+        color: #35442a;
+        font-size: 33px;
+        font-weight: 700;
+        letter-spacing: -0.07em;
+      }
+
+      .score-total > span {
+        display: inline;
+        color: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+      }
+
+      .score-total small {
+        display: inline;
+        color: #6d7464;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0;
+      }
+
+      .score-list {
+        display: grid;
+        gap: 13px;
+      }
+
+      .score-row {
+        display: grid;
+        gap: 6px;
+      }
+
+      .score-caption {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: #444940;
+        font-size: 11px;
+      }
+
+      .score-caption strong {
+        color: #353a32;
+        font-size: 11px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .score-bar {
+        display: block;
+        width: 100%;
+        height: 7px;
+        overflow: hidden;
+        appearance: none;
+        border: 0;
+        border-radius: 999px;
+        background: #ecefe8;
+      }
+
+      .score-bar::-webkit-progress-bar {
+        border-radius: 999px;
+        background: #ecefe8;
+      }
+
+      .score-bar::-webkit-progress-value {
+        border-radius: 999px;
+        background: linear-gradient(90deg, #a9bf83, #657d47);
+      }
+
+      .score-bar::-moz-progress-bar {
+        border-radius: 999px;
+        background: linear-gradient(90deg, #a9bf83, #657d47);
+      }
+
+      .score-explanation {
+        margin: 0;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.5;
+      }
+
+      .detected-text {
+        margin: 12px 0 0;
+        color: #444940;
+        font-size: 10px;
+        line-height: 1.6;
+      }
+
+      .analysis-method {
+        margin: 16px 0 0;
+        padding-top: 13px;
+        border-top: 1px solid #eceee8;
+        color: #74796f;
+        font-size: 10px;
+        line-height: 1.6;
+      }
+
+      .creative-metric {
+        padding: 13px;
+        border: 1px solid #eceee8;
+        border-radius: 12px;
+        background: #fbfcfa;
+      }
+
+      .creative-metric strong {
+        display: block;
+        font-size: 18px;
+        font-weight: 650;
+        letter-spacing: -0.05em;
+      }
+
+      .creative-metric span {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.4;
+      }
+
+      .creative-note {
+        margin: 0;
+        color: #62685a;
+        font-size: 11px;
+        line-height: 1.65;
+      }
+
+      .subsection-heading {
+        margin: 0 0 12px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .footnote {
+        margin: 20px 0 0;
+        color: #81857c;
+        font-size: 10px;
+        line-height: 1.6;
+        text-align: center;
+      }
+
+      @media (max-width: 820px) {
+        body {
+          padding: 22px 18px 40px;
+        }
+
+        .topbar {
+          margin-bottom: 42px;
+        }
+
+        .results-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .verdict-card {
+          min-height: 350px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding: 18px 14px 32px;
+        }
+
+        .topbar {
+          margin-bottom: 38px;
+        }
+
+        .page-heading {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 14px;
+          margin-bottom: 21px;
+        }
+
+        .heading-copy {
+          font-size: 13px;
+        }
+
+        .detail-grid {
+          grid-template-columns: 1fr;
+          gap: 12px;
+          margin-top: 12px;
+        }
+
+        .creative-analysis {
+          grid-template-columns: 1fr;
+          gap: 17px;
+          margin-top: 12px;
+        }
+
+        .creative-preview {
+          min-height: 180px;
+        }
+
+        .card-heading,
+        .detail-card {
+          padding: 20px 17px;
+        }
+
+        .scene-caption {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 16px 17px;
+        }
+
+        .distance-controls {
+          width: 100%;
+        }
+
+        .distance-controls button {
+          flex: 1;
+        }
+
+        .verdict-card {
+          min-height: 0;
+          padding: 21px 18px;
+        }
+
+        .metrics {
+          margin-top: 4px;
+        }
+
+        .metric {
+          padding: 11px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <nav class="topbar" aria-label="Navigare principală">
+        <a class="brand" href="index.html" aria-label="SightLine — pagina de analiză">
+          <span class="brand-mark" aria-hidden="true">↗</span>
+          <span>SightLine</span>
+        </a>
+        <a class="back-link" href="index.html">← Înapoi la datele campaniei</a>
+      </nav>
+
+      <header class="page-heading">
+        <div>
+          <p class="eyebrow">Rezultatul analizei</p>
+          <h1>O perspectivă mai clară.</h1>
+          <p class="heading-copy">Previzualizarea randării 3D și verdictul statistic al campaniei tale.</p>
+        </div>
+        <span class="demo-badge" id="data-badge">Date demonstrative</span>
+      </header>
+
+      <section class="results-grid" aria-label="Randare și verdict">
+        <article class="card render-card">
+          <div class="card-heading">
+            <div>
+              <h2>Randare 3D</h2>
+              <p class="card-copy" id="render-subtitle">Perspectiva șoferului pe traseu</p>
+            </div>
+            <span class="label-pill">Previzualizare</span>
+          </div>
+          <div class="scene">
+            <span class="scene-overlay">Simulare demonstrativă</span>
+            <svg viewBox="0 0 760 430" role="img" aria-labelledby="scene-title scene-description">
+              <title id="scene-title">Randare demonstrativă a unui panou publicitar pe o stradă</title>
+              <desc id="scene-description">O stradă urbană cu panou publicitar, clădiri și copaci, ilustrată în perspectivă 3D.</desc>
+              <defs>
+                <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stop-color="#c7d9d4"/>
+                  <stop offset="1" stop-color="#e6e9dd"/>
+                </linearGradient>
+                <linearGradient id="road" x1="0" x2="1" y1="0" y2="1">
+                  <stop offset="0" stop-color="#5a6260"/>
+                  <stop offset="1" stop-color="#303735"/>
+                </linearGradient>
+                <linearGradient id="building" x1="0" x2="1" y1="0" y2="1">
+                  <stop offset="0" stop-color="#e6d9c6"/>
+                  <stop offset="1" stop-color="#c3b39d"/>
+                </linearGradient>
+                <linearGradient id="billboard" x1="0" x2="1" y1="0" y2="1">
+                  <stop offset="0" stop-color="#f8f7ea"/>
+                  <stop offset="1" stop-color="#dce8c3"/>
+                </linearGradient>
+                <pattern id="windows" width="36" height="42" patternUnits="userSpaceOnUse">
+                  <rect x="7" y="8" width="15" height="22" rx="1" fill="#75847c" opacity=".58"/>
+                  <path d="M7 17h15M14.5 8v22" stroke="#d7d4c6" stroke-width="1" opacity=".8"/>
+                </pattern>
+              </defs>
+              <rect width="760" height="430" fill="url(#sky)"/>
+              <circle cx="616" cy="73" r="32" fill="#f3edc9" opacity=".7"/>
+              <path d="M0 198 100 116l90 41 96-85 101 101 90-52 120 62 81-43 82 62v111H0Z" fill="#b9c9b9" opacity=".55"/>
+              <path d="M0 171 99 104l78 27v169H0Z" fill="#9daba0"/>
+              <path d="M0 171 99 104l78 27-102 75Z" fill="#bac4b7"/>
+              <path d="M99 104v196" stroke="#86948b" stroke-width="3"/>
+              <path d="M8 179h82v91H8Z" fill="url(#windows)"/>
+              <path d="M100 131 212 97l60 36v185H100Z" fill="url(#building)"/>
+              <path d="m212 97 55 31-1 190h-54Z" fill="#aa9b85"/>
+              <path d="M109 145h96v160h-96Z" fill="url(#windows)"/>
+              <path d="m212 97 56 31 79-19 9 209-83 4Z" fill="#d4c4ae"/>
+              <path d="m268 128 79-19v209l-81 4Z" fill="#b7a58d"/>
+              <path d="M221 139h36v43h-36zm0 61h36v42h-36m57-59h47v44h-47zm0 62h47v44h-47Z" fill="#74827a" opacity=".65"/>
+              <path d="m353 127 69-30 83 21 3 193-154 6Z" fill="#e1d7c4"/>
+              <path d="m422 97 83 21 2 193-84 3Z" fill="#c1b29d"/>
+              <path d="m366 144 48-21 1 44-49 14zm0 58 48-8 1 45-49 9Z" fill="#849188"/>
+              <path d="m0 289 230-18 126 7 117-15 287 18v48H0Z" fill="#a5ad9b"/>
+              <path d="m0 330 281-62 173 18 306-55v199H0Z" fill="url(#road)"/>
+              <path d="m280 270 18 1-111 159h-24Zm172 17 20-3 109 146h-30Z" fill="#d8d1b3" opacity=".8"/>
+              <path d="m345 307 8-1-18 39h-11Zm73-4 9 1 20 42h-12Zm-107 69 11-2-9 22h-15Zm167-1 13 3 17 32h-14Z" fill="#e5e5d7" opacity=".75"/>
+              <path d="M29 253c4-48 24-75 50-78 27 3 40 36 42 79Z" fill="#617b63"/>
+              <path d="M40 266h12v37H39zm54-5h11v40H94Z" fill="#756d5e"/>
+              <path d="M557 248c2-41 19-64 39-66 22 3 34 31 36 68Z" fill="#71856a"/>
+              <path d="M571 257h9v39h-10zm42-2h10v40h-10Z" fill="#756d5e"/>
+              <path d="M516 230 631 214l-1 62-115 18Z" fill="#64716a" opacity=".22"/>
+              <path d="m516 119 133-21 1 92-134 24Z" fill="#566159"/>
+              <path d="m525 126 114-18 1 73-114 21Z" fill="url(#billboard)"/>
+              <path d="m525 126 9-5v73l-9-2Z" fill="#c3d0ae"/>
+              <text x="542" y="150" fill="#33422c" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" letter-spacing="2">PIZZA</text>
+              <text x="542" y="166" fill="#44503c" font-family="Segoe UI, sans-serif" font-size="7" font-weight="600">GUSTUL CARE TE ADUCE</text>
+              <path d="M542 176h40" stroke="#8ca16c" stroke-width="2"/>
+              <path d="M566 193v53m42-60v54" stroke="#555d57" stroke-width="5"/>
+              <path d="m564 245 5 0-6 10-5 0Zm42-6 5-1-5 10-5 1Z" fill="#555d57"/>
+              <path d="m128 327 44-10 33 12-45 12Z" fill="#d7e2db"/>
+              <path d="m128 327 32 14v20l-32-14Z" fill="#64746e"/>
+              <path d="m160 341 45-12v20l-45 12Z" fill="#87928d"/>
+              <path d="m128 327 44-10 33 12-45 12Z" fill="#b9c5be"/>
+              <path d="M0 319h760" stroke="#e1dbc7" stroke-width="3" opacity=".65"/>
+              <rect width="760" height="430" fill="url(#sky)" opacity=".035"/>
+            </svg>
+          </div>
+          <div class="scene-caption">
+            <div>
+              <p class="caption-main" id="distance-caption">La 150 m de panou</p>
+              <p class="caption-sub">Randare statică de prezentare · nu este generată de Unity</p>
+            </div>
+            <div class="distance-controls" aria-label="Distanță față de panou">
+              <button type="button" data-distance="150" aria-pressed="true">150 m</button>
+              <button type="button" data-distance="80" aria-pressed="false">80 m</button>
+              <button type="button" data-distance="30" aria-pressed="false">30 m</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card verdict-card">
+          <span class="label-pill" id="verdict-pill">Verdict statistic · demo</span>
+          <h2 id="verdict-title">Poziția A oferă cel mai bun raport între vizibilitate și cost.</h2>
+          <p class="verdict-copy" id="verdict-copy">În acest scenariu demonstrativ, suprafața reclamei rămâne vizibilă suficient timp pentru a fi observată din mers. Raportul include și o evaluare vizuală orientativă a creativului.</p>
+          <div class="metrics" aria-label="Indicatori demonstrativi">
+            <div class="metric">
+              <strong id="metric-impressions">18.420</strong>
+              <span>impresii reale estimate / lună</span>
+            </div>
+            <div class="metric">
+              <strong id="metric-cost">0,016 €</strong>
+              <span>cost / impresie reală</span>
+            </div>
+            <div class="metric">
+              <strong id="metric-visible">68%</strong>
+              <span>suprafață vizibilă</span>
+            </div>
+            <div class="metric">
+              <strong id="metric-seconds">4,2 s</strong>
+              <span>timp vizibil estimat</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="detail-grid" aria-label="Detalii și clasament">
+        <article class="card detail-card">
+          <div class="detail-heading">
+            <div>
+              <h2>Clasament poziții</h2>
+              <p class="card-copy" id="ranking-copy">Scoruri demonstrative pentru exemplu</p>
+            </div>
+            <span class="label-pill" id="ranking-pill">Exemplu</span>
+          </div>
+          <div class="ranking" id="ranking-list">
+            <div class="ranking-row">
+              <span class="rank-number">1</span>
+              <div>
+                <p class="rank-name">Poziția A · Calea Dorobanților</p>
+                <p class="rank-detail">68% vizibilitate · 4,2 s expunere</p>
+              </div>
+              <div class="rank-value">
+                <strong>0,016 €</strong>
+                <span>per impresie</span>
+              </div>
+            </div>
+            <div class="ranking-row">
+              <span class="rank-number">2</span>
+              <div>
+                <p class="rank-name">Poziția B · Piața Romană</p>
+                <p class="rank-detail">54% vizibilitate · 3,1 s expunere</p>
+              </div>
+              <div class="rank-value">
+                <strong>0,021 €</strong>
+                <span>per impresie</span>
+              </div>
+            </div>
+            <div class="ranking-row">
+              <span class="rank-number">3</span>
+              <div>
+                <p class="rank-name">Poziția C · Bd. Magheru</p>
+                <p class="rank-detail">42% vizibilitate · 2,6 s expunere</p>
+              </div>
+              <div class="rank-value">
+                <strong>0,029 €</strong>
+                <span>per impresie</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card detail-card">
+          <div class="detail-heading">
+            <div>
+              <h2>Datele campaniei</h2>
+              <p class="card-copy">Rezumatul trimis din formular</p>
+            </div>
+          </div>
+          <dl class="campaign-details">
+            <div>
+              <dt>Dimensiune panou</dt>
+              <dd id="campaign-size">12 × 4 m</dd>
+            </div>
+            <div>
+              <dt>Imagine</dt>
+              <dd id="campaign-image">Demo SightLine</dd>
+            </div>
+          </dl>
+          <div class="detail-heading" style="margin: 22px 0 12px">
+            <div>
+              <h2>Pinuri selectate</h2>
+              <p class="card-copy">Coordonate și preț lunar din formular</p>
+            </div>
+          </div>
+          <div id="campaign-locations">
+            <p class="empty-locations">Nu au fost selectate pinuri. Clasamentul de mai sus folosește exclusiv valori demonstrative.</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="card detail-card creative-analysis" aria-labelledby="creative-analysis-heading">
+        <div>
+          <div class="detail-heading">
+            <div>
+              <h2 id="creative-analysis-heading">Analiza panoului</h2>
+              <p class="card-copy">Paletă cromatică și caracteristici vizuale</p>
+            </div>
+            <span class="label-pill">Analiză vizuală</span>
+          </div>
+          <div class="creative-preview" id="creative-preview">
+            <p id="creative-preview-message">Imaginea încărcată va apărea aici pentru analiza culorilor.</p>
+          </div>
+        </div>
+        <div class="creative-findings">
+          <div>
+            <div class="detail-heading">
+              <div>
+                <h2>Paleta dominantă</h2>
+                <p class="card-copy">Culorile extrase din imaginea încărcată</p>
+              </div>
+            </div>
+            <div class="palette" id="creative-palette" aria-label="Paleta de culori"></div>
+          </div>
+          <div aria-labelledby="creative-score-heading">
+            <h3 class="subsection-heading" id="creative-score-heading">Evaluare vizuală</h3>
+            <div class="score-overview">
+              <div>
+                <span id="creative-average-label">Scorul creativului</span>
+                <p id="creative-average-method">Se analizează reclama…</p>
+              </div>
+              <strong class="score-total"><span id="creative-average">—</span><small> / 100</small></strong>
+            </div>
+            <div class="score-list" id="creative-scores" aria-live="polite">
+              <p class="score-explanation">Analiza OCR locală durează ~10–30 de secunde.</p>
+            </div>
+            <div class="ai-actions">
+              <button class="ai-update-button" id="creative-ai-suggestions" type="button" disabled>Cere sugestii AI</button>
+              <p class="ai-status" id="creative-ai-status" role="status" aria-live="polite">
+                Se activează după analiza locală a reclamei.
+              </p>
+              <div class="ai-suggestions" id="creative-ai-suggestions-result" aria-live="polite" hidden>
+                <h4>Sugestii AI</h4>
+                <p id="creative-ai-suggestions-text"></p>
+              </div>
+            </div>
+            <p class="analysis-method" id="creative-method">Scorurile vin din analiza locală a serverului SightLine: textul e detectat cu OCR (EasyOCR), iar contrastul, aglomerarea, ierarhia și separarea se măsoară cu OpenCV, fără API-uri externe. Criteriile care nu pot fi evaluate apar ca N/A și nu intră în medie.</p>
+          </div>
+          <div class="creative-metrics" aria-label="Indicatori cromatici orientativi">
+            <div class="creative-metric">
+              <strong id="creative-saturation">—</strong>
+              <span>Saturație medie estimată</span>
+            </div>
+            <div class="creative-metric">
+              <strong id="creative-contrast">—</strong>
+              <span>Variație tonală estimată</span>
+            </div>
+          </div>
+          <p class="creative-note" id="creative-recommendation" role="status" aria-live="polite">
+            Încarcă o imagine pentru a vedea paleta și scorurile vizuale orientative.
+          </p>
+        </div>
+      </section>
+
+      <p class="footnote">Randarea este demonstrativă. Scorul creativului este media ponderată a 6 criterii măsurate local (OCR + OpenCV); pragurile sunt orientative.</p>
+    </main>
+
+    <!-- P1: vederea șoferului (Street View + panou) și vizibilitatea; cheia Google stă în config.local.js (neurcat pe git) -->
+    <script src="config.local.js"></script>
+    <script src="sightline-view.js?v=32"></script>
+    <script>
+      const campaign = JSON.parse(sessionStorage.getItem("sightline-campaign") || "null");
+      const distanceCaption = document.querySelector("#distance-caption");
+      let latestCreativeScore = null;
+
+      function analyzeCreative(imageSource, sourceDimensions) {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.onload = () => {
+            try {
+              const canvas = document.createElement("canvas");
+              const scale = Math.min(1, 96 / Math.max(image.naturalWidth, image.naturalHeight));
+              canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+              canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+              const context = canvas.getContext("2d", { willReadFrequently: true });
+              context.drawImage(image, 0, 0, canvas.width, canvas.height);
+              const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+              const colors = new Map();
+              const luminances = [];
+              let saturationTotal = 0;
+              let saturationCount = 0;
+
+              for (let index = 0; index < pixels.length; index += 4) {
+                if (pixels[index + 3] < 128) continue;
+
+                const red = pixels[index];
+                const green = pixels[index + 1];
+                const blue = pixels[index + 2];
+                const color = [red, green, blue]
+                  .map((channel) => Math.round(channel / 16) * 16)
+                  .map((channel) => Math.min(255, channel));
+                const key = color.map((channel) => channel.toString(16).padStart(2, "0")).join("");
+                colors.set(key, (colors.get(key) || 0) + 1);
+
+                const normalized = [red, green, blue].map((channel) => channel / 255);
+                const max = Math.max(...normalized);
+                const min = Math.min(...normalized);
+                saturationTotal += max === 0 ? 0 : (max - min) / max;
+                saturationCount += 1;
+
+                const linear = normalized.map((channel) =>
+                  channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4,
+                );
+                luminances.push(0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]);
+              }
+
+              if (luminances.length === 0) {
+                throw new Error("Imaginea nu conține pixeli vizibili pentru analiză.");
+              }
+
+              luminances.sort((first, second) => first - second);
+              const edgeCells = new Array(16).fill(0);
+              let edgeCount = 0;
+              let strongEdgeCount = 0;
+              let edgeContrastTotal = 0;
+              let significantEdgeContrastTotal = 0;
+              let significantEdgeCount = 0;
+              let edgePairs = 0;
+              const cellWidth = canvas.width / 4;
+              const cellHeight = canvas.height / 4;
+
+              for (let y = 0; y < canvas.height; y += 1) {
+                for (let x = 0; x < canvas.width; x += 1) {
+                  const index = y * canvas.width + x;
+                  const cell = Math.min(3, Math.floor(y / cellHeight)) * 4 +
+                    Math.min(3, Math.floor(x / cellWidth));
+
+                  for (const neighbor of [
+                    x + 1 < canvas.width ? index + 1 : -1,
+                    y + 1 < canvas.height ? index + canvas.width : -1,
+                  ]) {
+                    if (neighbor < 0) continue;
+                    const difference = Math.abs(luminances[index] - luminances[neighbor]);
+                    edgeContrastTotal += difference;
+                    edgePairs += 1;
+                    if (difference >= 0.08) {
+                      edgeCount += 1;
+                      significantEdgeContrastTotal += difference;
+                      significantEdgeCount += 1;
+                      edgeCells[cell] += 1;
+                    }
+                    if (difference >= 0.18) strongEdgeCount += 1;
+                  }
+                }
+              }
+
+              const edgeDensity = edgeCount / Math.max(1, edgePairs);
+              const strongEdgeRatio = strongEdgeCount / Math.max(1, edgeCount);
+              const meanEdgeContrast = edgeContrastTotal / Math.max(1, edgePairs);
+              const meanSignificantContrast =
+                significantEdgeContrastTotal / Math.max(1, significantEdgeCount);
+              const sortedColors = [...colors.entries()].sort((first, second) => second[1] - first[1]);
+              const colorEntropy = sortedColors.reduce((entropy, [, count]) => {
+                const probability = count / saturationCount;
+                return entropy - probability * Math.log2(probability);
+              }, 0);
+              const populatedCells = edgeCells.filter((count) => count > 0).length / edgeCells.length;
+              const highEdgeContrast = Math.min(100, Math.round((meanSignificantContrast / 0.7) * 100));
+              const textDensityFit = Math.max(0, Math.min(100, Math.round(
+                (1 - Math.abs(edgeDensity - 0.1) / 0.2) * 100,
+              )));
+              const colorSeparation = Math.max(0, Math.min(100, Math.round(
+                (1 - Math.abs(colorEntropy - 2.3) / 3.2) * 100,
+              )));
+              const hierarchyBalance = Math.max(0, Math.min(100, Math.round(
+                (1 - Math.abs(strongEdgeRatio - 0.42) / 0.7) * 100,
+              )));
+              const resolutionScore = Math.min(100, Math.round(
+                (Math.sqrt(sourceDimensions.width * sourceDimensions.height) /
+                  Math.sqrt(1600 * 900)) * 100,
+              ));
+              const sharpnessScore = Math.min(100, Math.round((strongEdgeRatio / 0.65) * 100));
+              const scores = {
+                readability: Math.round(highEdgeContrast * 0.6 + textDensityFit * 0.4),
+                contrast: highEdgeContrast,
+                textAmount: textDensityFit,
+                visualClutter: Math.max(0, Math.min(100, Math.round(
+                  100 - edgeDensity * 240 - Math.max(0, colorEntropy - 2.5) * 10,
+                ))),
+                typographicHierarchy: Math.round(
+                  hierarchyBalance * 0.65 + populatedCells * 100 * 0.35,
+                ),
+                elementSeparation: Math.round(
+                  highEdgeContrast * 0.65 + colorSeparation * 0.35,
+                ),
+                technicalQuality: Math.round(resolutionScore * 0.7 + sharpnessScore * 0.3),
+              };
+              const averageScore = Math.round(
+                Object.values(scores).reduce((total, score) => total + score, 0) /
+                  Object.keys(scores).length,
+              );
+
+              resolve({
+                colors: sortedColors
+                  .slice(0, 5)
+                  .map(([hex]) => `#${hex}`),
+                saturation: Math.round((saturationTotal / saturationCount) * 100),
+                tonalVariation: Math.round(
+                  (luminances[Math.floor(luminances.length * 0.9)] -
+                    luminances[Math.floor(luminances.length * 0.1)]) *
+                    100,
+                ),
+                scores,
+                averageScore,
+              });
+            } catch (error) {
+              reject(error);
+            }
+          };
+          image.onerror = () => reject(new Error("Imaginea nu a putut fi deschisă pentru analiza culorilor."));
+          image.src = imageSource;
+        });
+      }
+
+      async function renderCreativeAnalysis(campaignData) {
+        const preview = document.querySelector("#creative-preview");
+        const previewMessage = document.querySelector("#creative-preview-message");
+        const recommendation = document.querySelector("#creative-recommendation");
+        const palette = document.querySelector("#creative-palette");
+
+        if (!campaignData?.creativePreview) return;
+
+        const image = document.createElement("img");
+        image.src = campaignData.creativePreview;
+        image.alt = `Imaginea reclamei ${campaignData.creativeFileName}`;
+        preview.replaceChildren(image);
+        recommendation.textContent = "Se analizează reclama (OCR local, ~10–30 de secunde)…";
+
+        // paleta și indicatorii cromatici se calculează în browser (descriptivi, nu intră în scor)
+        let heuristic = null;
+        try {
+          const dimensions = campaignData.creativeDimensions || { width: 640, height: 640 };
+          heuristic = await analyzeCreative(campaignData.creativePreview, dimensions);
+          heuristic.colors.forEach((color) => {
+            const swatch = document.createElement("div");
+            swatch.className = "swatch";
+            const sample = document.createElement("span");
+            sample.className = "swatch-color";
+            sample.style.backgroundColor = color;
+            sample.setAttribute("aria-label", `Culoare ${color}`);
+            const value = document.createElement("code");
+            value.textContent = color.toUpperCase();
+            swatch.append(sample, value);
+            palette.append(swatch);
+          });
+          document.querySelector("#creative-saturation").textContent = `${heuristic.saturation}%`;
+          document.querySelector("#creative-contrast").textContent = `${heuristic.tonalVariation}%`;
+        } catch (error) {
+          preview.replaceChildren(previewMessage);
+        }
+
+        // scorul real: analiza locală din server (POST /analiza-reclama)
+        try {
+          const result = await requestCreativeScore(campaignData);
+          renderCreativeScore(result);
+        } catch (error) {
+          if (heuristic) {
+            renderHeuristicScores(heuristic, error);
+          } else {
+            recommendation.textContent = `Nu am putut analiza reclama: ${error.message}`;
+          }
+        }
+      }
+
+      async function requestCreativeScore(campaignData) {
+        const response = await fetch("/analiza-reclama", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: campaignData.creativeAnalysisImage || campaignData.creativePreview }),
+        });
+        let result;
+        try {
+          result = await response.json();
+        } catch {
+          throw new Error("serverul nu are analiza reclamei — pornește-l cu „python scoring/analiza_panou/server_site.py”");
+        }
+        if (!response.ok) throw new Error(result.error || `eroare ${response.status}`);
+        return result;
+      }
+
+      function scoreRow(label, score, explanation) {
+        const row = document.createElement("div");
+        row.className = "score-row";
+        const caption = document.createElement("div");
+        caption.className = "score-caption";
+        const name = document.createElement("span");
+        name.textContent = label;
+        const value = document.createElement("strong");
+        value.textContent = score == null ? "N/A" : String(score);
+        caption.append(name, value);
+        const bar = document.createElement("progress");
+        bar.className = "score-bar";
+        bar.max = 100;
+        bar.value = score ?? 0;
+        bar.setAttribute("aria-label", label);
+        bar.setAttribute("aria-valuetext", score == null ? "neevaluat" : `${score} din 100`);
+        row.append(caption, bar);
+        if (explanation) {
+          const note = document.createElement("p");
+          note.className = "score-explanation";
+          note.textContent = explanation;
+          row.append(note);
+        }
+        return row;
+      }
+
+      function renderCreativeScore(result) {
+        latestCreativeScore = result;
+        document.querySelector("#creative-ai-suggestions").disabled = false;
+        document.querySelector("#creative-ai-status").textContent =
+          "Sugestiile AI vor folosi doar scorurile și recomandările măsurate.";
+        const evaluated = result.criteria.filter((criterion) => criterion.scor != null);
+        const coverage = `${evaluated.length} din ${result.criteria.length} criterii (acoperire ${result.coverage_pct}%)`;
+        // ≥ 80%: scor final · 60–79%: doar provizoriu · < 60%: fără scor (nu se afișează o cifră)
+        const status = result.evaluation_status || (result.score != null ? "completa" : "insuficienta");
+        let total = null;
+        let label;
+        let method;
+        if (status === "completa") {
+          total = result.score;
+          label = `Scorul creativului · ${result.rating}`;
+          method = `Media ponderată a ${coverage}`;
+        } else if (status === "provizorie") {
+          total = result.score_provisional;
+          label = "Scor provizoriu · evaluare incompletă";
+          method = `Au putut fi evaluate doar ${coverage}; scorul nu e final.`;
+        } else {
+          label = "Fără scor · imagine nereprezentativă pentru o reclamă";
+          method = "Imaginea încărcată nu pare reprezentativă pentru o reclamă outdoor: nu are text lizibil sau " +
+            `textul nu a putut fi citit, așa că s-au putut evalua doar ${coverage}. ` +
+            "Încarcă grafica reclamei, cu mesajul și textul vizibile.";
+        }
+        document.querySelector("#creative-average").textContent = total == null ? "—" : String(total);
+        document.querySelector("#creative-average-label").textContent = label;
+        document.querySelector("#creative-average-method").textContent = method;
+
+        const list = document.querySelector("#creative-scores");
+        list.replaceChildren(...result.criteria.map((criterion) => {
+          const label = `${criterion.nume} · ${criterion.pondere}%${criterion.status === "incert" ? " · incert" : ""}`;
+          return scoreRow(label, criterion.scor, criterion.parere);
+        }));
+        const texts = result.texts.filter((text) => text.tip !== "watermark").map((text) => `„${text.text}”`);
+        if (texts.length > 0) {
+          const detected = document.createElement("p");
+          detected.className = "detected-text";
+          detected.textContent = `Text detectat: ${texts.join(", ")}`;
+          list.append(detected);
+        }
+
+        const recommendations = result.recommendations.slice(0, 3);
+        document.querySelector("#creative-recommendation").textContent = recommendations.length > 0
+          ? `Recomandări: ${recommendations.join(" ")}`
+          : "Nicio problemă majoră măsurată; nu sunt recomandări.";
+      }
+
+      function renderHeuristicScores(analysis, error) {
+        latestCreativeScore = null;
+        document.querySelector("#creative-ai-suggestions").disabled = true;
+        document.querySelector("#creative-ai-status").textContent =
+          "Sugestiile AI necesită scorurile locale măsurate de server; estimarea din browser nu este suficientă.";
+        const labels = {
+          readability: "Lizibilitate text", contrast: "Contrast text–fundal", textAmount: "Cantitate de text",
+          visualClutter: "Aglomerare vizuală", typographicHierarchy: "Ierarhie tipografică",
+          elementSeparation: "Separarea elementelor", technicalQuality: "Calitate tehnică",
+        };
+        document.querySelector("#creative-average").textContent = String(analysis.averageScore);
+        document.querySelector("#creative-average-label").textContent = "Estimare euristică (fără OCR)";
+        document.querySelector("#creative-average-method").textContent = "Media celor 7 estimări din pixeli, calculată în browser";
+        document.querySelector("#creative-scores").replaceChildren(
+          ...Object.entries(analysis.scores).map(([key, score]) => scoreRow(labels[key], score)),
+        );
+        document.querySelector("#creative-method").textContent =
+          "Scorurile de mai sus sunt estimări euristice din pixeli, nu OCR: textul nu e detectat direct.";
+        document.querySelector("#creative-recommendation").textContent =
+          `Analiza OCR nu a fost disponibilă (${error.message}). Se afișează estimarea din browser.`;
+      }
+
+      async function requestCreativeSuggestions() {
+        if (!latestCreativeScore) return;
+        const button = document.querySelector("#creative-ai-suggestions");
+        const status = document.querySelector("#creative-ai-status");
+        const suggestions = document.querySelector("#creative-ai-suggestions-result");
+        button.disabled = true;
+        suggestions.hidden = true;
+        document.querySelector("#creative-ai-suggestions-text").textContent = "";
+        status.textContent = "Se trimit scorurile și recomandările către Gemini…";
+        try {
+          const criteria = latestCreativeScore.criteria.map((criterion) => ({
+            name: criterion.nume,
+            score: criterion.scor,
+            weight: criterion.pondere,
+            reason: criterion.parere,
+          }));
+          const response = await fetch("/sugestii-ai", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              overallScore: latestCreativeScore.score ?? latestCreativeScore.score_provisional,
+              criteria,
+              recommendations: latestCreativeScore.recommendations || [],
+            }),
+          });
+          let result;
+          try {
+            result = await response.json();
+          } catch {
+            throw new Error("serverul nu a returnat un răspuns valid pentru sugestiile AI.");
+          }
+          if (!response.ok) throw new Error(result.error || `eroare ${response.status}`);
+          if (typeof result.suggestions !== "string" || !result.suggestions.trim()) {
+            throw new Error("modelul nu a returnat sugestii.");
+          }
+
+          document.querySelector("#creative-ai-suggestions-text").textContent = result.suggestions.trim();
+          suggestions.hidden = false;
+          status.textContent = `Recomandări primite de la ${result.provider || "Gemini API"}.`;
+        } catch (error) {
+          status.textContent = `Nu am putut genera sugestiile: ${error.message}`;
+        } finally {
+          button.disabled = !latestCreativeScore;
+        }
+      }
+
+      document.querySelector("#creative-ai-suggestions").addEventListener("click", requestCreativeSuggestions);
+
+      document.querySelectorAll("[data-distance]").forEach((button) => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll("[data-distance]").forEach((item) => {
+            item.setAttribute("aria-pressed", String(item === button));
+          });
+          distanceCaption.textContent = `La ${button.dataset.distance} m de panou`;
+        });
+      });
+
+      if (campaign) {
+        document.querySelector("#campaign-size").textContent =
+          `${campaign.billboardSize.width} × ${campaign.billboardSize.height} m`;
+        document.querySelector("#campaign-image").textContent =
+          campaign.creativeFileName || "Nu a fost încărcată";
+
+        if (campaign.locations.length > 0) {
+          const list = document.createElement("div");
+          list.className = "ranking";
+          campaign.locations.forEach((location, index) => {
+            const row = document.createElement("div");
+            row.className = "ranking-row";
+            const rank = document.createElement("span");
+            rank.className = "rank-number";
+            rank.textContent = String(index + 1);
+            const details = document.createElement("div");
+            const name = document.createElement("p");
+            name.className = "rank-name";
+            name.textContent = `Pin ${index + 1} · ${location.lat.toFixed(5)}, ${location.lon.toFixed(5)}`;
+            const price = document.createElement("p");
+            price.className = "rank-detail";
+            price.textContent = `${location.monthlyPriceEur.toLocaleString("ro-RO")} € / lună`;
+            details.append(name, price);
+            row.append(rank, details);
+            list.append(row);
+          });
+          document.querySelector("#campaign-locations").replaceChildren(list);
+        }
+
+        renderCreativeAnalysis(campaign);
+
+        if (campaign.locations.length > 0) {
+          loadScore(campaign);
+        }
+      }
+
+      // ---------- clasament real: pinurile -> scoring/server.py (POST /score) ----------
+
+      function pinLabel(locationId) {
+        const index = campaign.locations.findIndex((location) => location.id === locationId);
+        return index >= 0 ? `Pin ${index + 1}` : locationId;
+      }
+
+      function formatNumber(value, digits = 0) {
+        return Number(value).toLocaleString("ro-RO", {
+          minimumFractionDigits: digits,
+          maximumFractionDigits: digits,
+        });
+      }
+
+      function formatCost(value) {
+        return value == null ? "nevizibil" : `${formatNumber(value, 4)} €`;
+      }
+
+      async function loadScore(campaignData) {
+        const verdictCopy = document.querySelector("#verdict-copy");
+        const demoState = ["#verdict-title", "#metric-impressions", "#metric-cost", "#metric-visible",
+          "#metric-seconds", "#ranking-list"].map((selector) => {
+          const element = document.querySelector(selector);
+          return [element, element.innerHTML];
+        });
+        // Cat timp se calculeaza, nu mai aratam cifrele demonstrative.
+        document.querySelector("#verdict-title").textContent = "Se calculează cea mai bună locație…";
+        verdictCopy.textContent = "Caut strada fiecărui pin în OpenStreetMap și aplic formula de cost pe impresie reală.";
+        ["#metric-impressions", "#metric-cost", "#metric-visible", "#metric-seconds"].forEach((selector) => {
+          document.querySelector(selector).textContent = "…";
+        });
+        document.querySelector("#ranking-list").textContent = "Se calculează…";
+        document.querySelector("#data-badge").textContent = "Se calculează…";
+        try {
+          // P1: procentul acoperit calculat de sightline-view.js (clădiri și copaci); fără el, scoring/ folosește valoarea implicită
+          const sightline = window.SightLineView ? await window.SightLineView.ready.catch(() => ({})) : {};
+          const response = await fetch("/score", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              billboardSize: campaignData.billboardSize,
+              locations: campaignData.locations.map(({ id, lat, lon, monthlyPriceEur }) => ({
+                id, lat, lon, monthlyPriceEur,
+                ...(sightline[id] ? { occluded_pct: sightline[id].occluded_pct } : {}),
+              })),
+            }),
+          });
+          let result;
+          try {
+            result = await response.json();
+          } catch {
+            throw new Error(
+              `serverul a răspuns cu ${response.status}, dar nu este serverul SightLine — ai pornit probabil „python3 -m http.server”`
+            );
+          }
+          if (!response.ok) throw new Error(result.error || `eroare ${response.status}`);
+          renderScore(result);
+        } catch (error) {
+          demoState.forEach(([element, html]) => { element.innerHTML = html; });
+          document.querySelector("#data-badge").textContent = "Date demonstrative";
+          verdictCopy.textContent =
+            `Nu am putut calcula clasamentul (${error.message}). Pornește serverul cu „python scoring/analiza_panou/server_site.py” (sau „python3 scoring/server.py”) și deschide site-ul de la http://localhost:8000. Cifrele de mai jos sunt demonstrative.`;
+        }
+      }
+
+      function renderScore(result) {
+        const best = result.best;
+        document.querySelector("#data-badge").textContent = "Estimare din coordonate";
+        document.querySelector("#verdict-pill").textContent = "Verdict statistic · estimare";
+
+        if (!best) {
+          document.querySelector("#verdict-title").textContent = "Niciun panou nu este vizibil din trafic.";
+          document.querySelector("#verdict-copy").textContent = result.estimates_note;
+        } else {
+          document.querySelector("#verdict-title").textContent =
+            `${pinLabel(best.location_id)} · ${best.road_name} are cel mai mic cost pe impresie reală.`;
+          document.querySelector("#verdict-copy").textContent =
+            `Coordonate: ${best.lat.toFixed(6)}, ${best.lon.toFixed(6)}. ` +
+            `Preț ${formatNumber(best.monthly_price_eur)} € / lună, ` +
+            `aprox. ${formatNumber(best.daily_cars_est)} mașini pe zi ` +
+            `(${best.road_type}, ${best.lanes} benzi, ${formatNumber(best.speed_kmh)} km/h). ` +
+            result.estimates_note;
+          document.querySelector("#metric-impressions").textContent = formatNumber(best.real_impressions_month);
+          document.querySelector("#metric-cost").textContent = formatCost(best.cost_per_real_impression_eur);
+          document.querySelector("#metric-visible").textContent = `${formatNumber(best.visible_surface_pct)}%`;
+          document.querySelector("#metric-seconds").textContent = `${formatNumber(best.visible_seconds, 1)} s`;
+        }
+
+        document.querySelector("#ranking-copy").textContent = "Cost pe impresie reală, de la cel mai mic";
+        document.querySelector("#ranking-pill").textContent = "Estimare";
+        const rows = result.locations.map((location) => {
+          const row = document.createElement("div");
+          row.className = "ranking-row";
+          const rank = document.createElement("span");
+          rank.className = "rank-number";
+          rank.textContent = String(location.rank);
+          const details = document.createElement("div");
+          const name = document.createElement("p");
+          name.className = "rank-name";
+          name.textContent = `${pinLabel(location.location_id)} · ${location.road_name}`;
+          const detail = document.createElement("p");
+          detail.className = "rank-detail";
+          detail.textContent =
+            `${formatNumber(location.daily_cars_est)} mașini/zi · ` +
+            `${formatNumber(location.real_impressions_month)} impresii/lună · ` +
+            `${formatNumber(location.monthly_price_eur)} €/lună`;
+          details.append(name, detail);
+          const value = document.createElement("div");
+          value.className = "rank-value";
+          const cost = document.createElement("strong");
+          cost.textContent = formatCost(location.cost_per_real_impression_eur);
+          const unit = document.createElement("span");
+          unit.textContent = "per impresie";
+          value.append(cost, unit);
+          row.append(rank, details, value);
+          return row;
+        });
+        document.querySelector("#ranking-list").replaceChildren(...rows);
+      }
+    </script>
+  </body>
+</html>

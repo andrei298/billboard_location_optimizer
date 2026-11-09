@@ -1,0 +1,8 @@
+numpy>=1.26
+pillow>=10.0
+opencv-python-headless>=4.8
+# OCR local (fără API); la prima rulare își descarcă modelele o singură dată
+easyocr>=1.7
+# opțional: motor OCR alternativ, mai rapid (python -m analiza_panou img --ocr rapidocr)
+# rapidocr>=3.0
+# onnxruntime>=1.17
